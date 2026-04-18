@@ -9,19 +9,28 @@ const PAGE_ROUTES = {
 };
 
 export function navigateTo(path) {
-  console.info("[NutriTech] Navegando a:", path);
-  window.location.href = path;
+  try {
+    console.info("[NutriTech] Navegando a:", path);
+    window.location.href = path;
+  } catch (error) {
+    console.error("[NutriTech] Falló navegación:", error);
+  }
 }
 
 export function initNavigation() {
+  console.info("[NutriTech] initNavigation()");
   document.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-nav]");
     if (!trigger) return;
 
     event.preventDefault();
+    console.log("[NutriTech] Click data-nav detectado:", trigger.dataset.nav);
     const route = trigger.dataset.nav;
     if (!route) {
       console.warn("[NutriTech] data-nav vacío", trigger);
+      if (trigger.tagName === "A" && trigger.getAttribute("href")) {
+        window.location.href = trigger.getAttribute("href");
+      }
       return;
     }
 
