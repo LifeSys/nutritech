@@ -26,7 +26,7 @@ h1,h2 { font-family:'Manrope'; }
 <button type="button" data-nav="comunidad.html" class="p-3 hover:bg-white rounded-xl cursor-pointer text-left">Comunidad</button>
 </nav>
 
-<button type="button" onclick="goTo('dashboard.html')" class="mt-auto bg-green-600 text-white p-3 rounded-xl">Volver Dashboard</button>
+<a href="dashboard.html" data-nav="dashboard.html" class="mt-auto bg-green-600 text-white p-3 rounded-xl text-center block">Volver Dashboard</a>
 <button id="logoutBtn" type="button" class="mt-4 text-gray-500">Cerrar sesión</button>
 </aside>
 
@@ -44,17 +44,38 @@ h1,h2 { font-family:'Manrope'; }
 <div class="card"><p>Posts</p><h2 id="kpiPosts" class="text-3xl font-bold">0</h2></div>
 </div>
 <div class="card">
-<div class="flex justify-between mb-4"><h2 class="font-bold text-lg">Gestión de Usuarios</h2><button id="addUserBtn" type="button" class="bg-green-600 text-white px-4 py-2 rounded-full">+ Añadir Usuario</button></div>
+<h2 class="font-bold text-lg mb-4">Crear usuario administrativo</h2>
+<form id="addUserForm" class="grid md:grid-cols-4 gap-3 mb-6">
+<input name="name" required placeholder="Nombre" class="border rounded px-3 py-2">
+<input name="email" type="email" required placeholder="email@nutritech.com" class="border rounded px-3 py-2">
+<select name="role" class="border rounded px-3 py-2"><option value="user">user</option><option value="admin">admin</option></select>
+<button type="submit" class="bg-green-600 text-white rounded px-3 py-2">Crear usuario</button>
+</form>
 <table class="w-full text-left"><thead><tr class="text-gray-400 text-sm"><th>Usuario</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="userTable"></tbody></table>
 <div id="usersEmpty" class="hidden text-center text-gray-500 py-6">No hay usuarios para mostrar.</div>
 </div>
 </section>
 
+<section id="editUserPanel" class="hidden admin-section">
+<div class="card max-w-xl">
+<h2 class="font-bold text-lg mb-3">Editar usuario</h2>
+<form id="editUserForm" class="space-y-3">
+<input type="hidden" name="userId" id="editUserId">
+<input name="name" id="editName" required class="border rounded px-3 py-2 w-full" placeholder="Nombre">
+<select name="role" id="editRole" class="border rounded px-3 py-2 w-full"><option value="user">user</option><option value="admin">admin</option></select>
+<div class="flex gap-2">
+<button type="submit" class="bg-green-600 text-white rounded px-3 py-2">Guardar cambios</button>
+<button type="button" id="cancelEditUser" class="border rounded px-3 py-2">Cancelar</button>
+</div>
+</form>
+</div>
+</section>
+
 <section data-section="usuarios" class="admin-section hidden"><div class="card"><h2 class="font-bold text-lg mb-2">Usuarios</h2><p class="text-gray-600">Gestiona usuarios desde la tabla principal del resumen.</p><button type="button" data-admin-section="resumen" class="mt-4 text-green-700 font-semibold">Ir a gestión</button></div></section>
 <section data-section="analisis" class="admin-section hidden"><div class="card"><h2 class="font-bold text-lg mb-2">Análisis</h2><p class="text-gray-600">La actividad de comunidad y uso se refleja en tiempo real desde Firestore.</p></div></section>
-<section data-section="seguridad" class="admin-section hidden"><div class="card"><h2 class="font-bold text-lg mb-2">Seguridad</h2><p class="text-gray-600">Revisa roles de usuario y acceso administrativo periódicamente.</p></div></section>
+<section data-section="seguridad" class="admin-section hidden"><div class="card"><h2 class="font-bold text-lg mb-2">Seguridad</h2><p class="text-gray-600">El módulo valida rol admin antes de renderizar este panel.</p></div></section>
 </main>
 
-<script type="module" src="js/app.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>

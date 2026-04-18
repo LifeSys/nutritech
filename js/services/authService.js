@@ -11,77 +11,76 @@ import {
   onAuthStateChanged
 } from "./firebase.js";
 
-export async function register({ name, email, password }) {
+export async function registerUser({ name, email, password }) {
   const normalizedEmail = email.trim().toLowerCase();
   const credential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
 
   await setDoc(doc(db, "users", credential.user.uid), {
+    uid: credential.user.uid,
     name: name.trim(),
     email: normalizedEmail,
     role: "user",
-    createdAt: serverTimestamp()
-  });
+    onboardingCompleted: false,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  }, { merge: true });
 
   return credential.user;
 }
 
-export async function login({ email, password }) {
+export async function loginUser({ email, password }) {
   const normalizedEmail = email.trim().toLowerCase();
   const credential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
   return credential.user;
 }
 
-export async function logout() {
+export async function logoutUser() {
   await signOut(auth);
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUserProfile() {
   const user = auth.currentUser;
   if (!user) return null;
 
   const userDoc = await getDoc(doc(db, "users", user.uid));
-  const profile = userDoc.exists() ? userDoc.data() : null;
-
   return {
     uid: user.uid,
     email: user.email,
-    ...profile
+    ...(userDoc.exists() ? userDoc.data() : {})
   };
 }
 
-export async function checkAuth({
-  redirectIfUnauthenticated = false,
-  redirectTo = "index.html",
-  requireAdmin = false,
-  nonAdminRedirect = "dashboard.html"
-} = {}) {
+export async function watchAuthState() {
   return new Promise((resolve) => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      unsubscribe();
-
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      unsub();
       if (!user) {
-        if (redirectIfUnauthenticated) {
-          window.location.href = redirectTo;
-        }
         resolve(null);
         return;
       }
 
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      const profile = userDoc.exists() ? userDoc.data() : {};
-      const fullUser = {
+      resolve({
         uid: user.uid,
         email: user.email,
-        ...profile
-      };
-
-      if (requireAdmin && fullUser.role !== "admin") {
-        window.location.href = nonAdminRedirect;
-        resolve(null);
-        return;
-      }
-
-      resolve(fullUser);
+        ...(userDoc.exists() ? userDoc.data() : {})
+      });
     });
   });
+}
+
+export async function requireAuth({ redirectTo = "index.html", requireAdmin = false, nonAdminRedirect = "dashboard.html" } = {}) {
+  const user = await watchAuthState();
+
+  if (!user) {
+    window.location.href = redirectTo;
+    return null;
+  }
+
+  if (requireAdmin && user.role !== "admin") {
+    window.location.href = nonAdminRedirect;
+    return null;
+  }
+
+  return user;
 }

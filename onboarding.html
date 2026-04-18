@@ -14,7 +14,7 @@ h1 { font-family: 'Manrope', sans-serif; }
 </head>
 <body data-page="onboarding">
 <header class="flex justify-between items-center px-10 py-6">
-    <h2 class="text-xl font-bold text-green-700">NutriTech Solutions</h2>
+    <h2 class="text-xl font-bold text-green-700">NutriTech</h2>
     <span class="text-gray-500 text-sm">Paso 1 de 3</span>
 </header>
 
@@ -39,11 +39,11 @@ h1 { font-family: 'Manrope', sans-serif; }
     </div>
 
     <div class="flex justify-between items-center mt-16">
-        <button type="button" onclick="goTo('index.html')" class="text-gray-500">← Atrás</button>
+        <button type="button" data-action="back-index" class="text-gray-500">← Atrás</button>
         <button id="continueOnboardingBtn" type="button" class="bg-green-600 text-white px-8 py-3 rounded-full font-bold">Continuar</button>
     </div>
 </section>
 
-<script type="module" src="js/app.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
