@@ -24,9 +24,15 @@ async function renderPlanHistory(userId) {
 
   list.querySelectorAll("[data-remove-plan]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      await removePlan(btn.dataset.removePlan);
-      showAlert("Plan eliminado", "info");
-      await renderPlanHistory(userId);
+      try {
+        console.log("[Planes] Eliminando plan:", btn.dataset.removePlan);
+        await removePlan(btn.dataset.removePlan);
+        showAlert("Plan eliminado", "info");
+        await renderPlanHistory(userId);
+      } catch (error) {
+        console.error("[Planes] Error eliminando plan:", error);
+        showAlert("No se pudo eliminar el plan", "error");
+      }
     });
   });
 }
@@ -44,11 +50,15 @@ export async function initPlanesModule() {
       card?.classList.add("selected-plan");
 
       try {
+        console.log("[Planes] Seleccionando plan:", btn.dataset.plan);
         setButtonLoading(btn, true, "Guardando...");
         await assignPlan({ userId: user.uid, planName: btn.dataset.plan });
         await saveUser(user.uid, { selectedPlan: btn.dataset.plan });
         showAlert(`Plan ${btn.dataset.plan} activado`, "success");
         await renderPlanHistory(user.uid);
+      } catch (error) {
+        console.error("[Planes] Error guardando plan:", error);
+        showAlert("No se pudo guardar el plan", "error");
       } finally {
         setButtonLoading(btn, false);
       }

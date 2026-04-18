@@ -18,7 +18,10 @@ function initAdminSections() {
     });
   };
 
-  menuButtons.forEach((btn) => btn.addEventListener("click", () => activate(btn.dataset.adminSection)));
+  menuButtons.forEach((btn) => btn.addEventListener("click", () => {
+    console.log("[Admin] Navegando sección:", btn.dataset.adminSection);
+    activate(btn.dataset.adminSection);
+  }));
 }
 
 function userRowTemplate(user) {
@@ -54,20 +57,39 @@ async function renderUsers(filter = "") {
 
   table.querySelectorAll(".edit-user").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const row = btn.closest("tr");
-      const userId = btn.dataset.userId;
-      document.getElementById("editUserId").value = userId;
-      document.getElementById("editName").value = row.children[0].textContent.trim();
-      document.getElementById("editRole").value = row.children[2].textContent.trim();
-      document.getElementById("editUserPanel").classList.remove("hidden");
+      try {
+        const row = btn.closest("tr");
+        const userId = btn.dataset.userId;
+        if (!row || !userId) {
+          throw new Error("No se pudo obtener la fila del usuario");
+        }
+        console.log("[Admin] Editar usuario:", userId);
+        document.getElementById("editUserId").value = userId;
+        document.getElementById("editName").value = row.children[0].textContent.trim();
+        document.getElementById("editRole").value = row.children[2].textContent.trim();
+        document.getElementById("editUserPanel").classList.remove("hidden");
+      } catch (error) {
+        console.error("[Admin] Error al preparar edición:", error);
+        showAlert("No se pudo abrir el editor del usuario", "error");
+      }
     });
   });
 
   table.querySelectorAll(".delete-user").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      await removeUser(btn.dataset.userId);
-      showAlert("Usuario eliminado", "success");
-      await renderUsers(filter);
+      try {
+        const userId = btn.dataset.userId;
+        console.log("[Admin] Eliminar usuario:", userId);
+        if (!userId) {
+          throw new Error("ID de usuario no válido");
+        }
+        await removeUser(userId);
+        showAlert("Usuario eliminado", "success");
+        await renderUsers(filter);
+      } catch (error) {
+        console.error("[Admin] Error eliminando usuario:", error);
+        showAlert("No se pudo eliminar el usuario", "error");
+      }
     });
   });
 }
@@ -95,15 +117,21 @@ export async function initAdminModule() {
     const email = form.email.value.trim().toLowerCase();
     const role = form.role.value;
 
-    if (!name || !email.includes("@")) {
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!name || !isValidEmail) {
       showAlert("Datos de usuario inválidos", "error");
       return;
     }
 
-    await createAdminManagedUser({ name, email, role });
-    form.reset();
-    showAlert("Usuario agregado", "success");
-    await renderUsers(search?.value || "");
+    try {
+      await createAdminManagedUser({ name, email, role });
+      form.reset();
+      showAlert("Usuario agregado", "success");
+      await renderUsers(search?.value || "");
+    } catch (error) {
+      console.error("[Admin] Error creando usuario:", error);
+      showAlert("No se pudo crear el usuario", "error");
+    }
   });
 
   document.getElementById("editUserForm")?.addEventListener("submit", async (event) => {
@@ -113,15 +141,20 @@ export async function initAdminModule() {
     const name = form.name.value.trim();
     const role = form.role.value;
 
-    if (!userId || !name || !["admin", "user"].includes(role)) {
+    if (!userId || !name || name.length < 2 || !["admin", "user"].includes(role)) {
       showAlert("No se pudo validar la edición", "error");
       return;
     }
 
-    await updateUser(userId, { name, role });
-    form.closest("section").classList.add("hidden");
-    showAlert("Usuario actualizado", "success");
-    await renderUsers(search?.value || "");
+    try {
+      await updateUser(userId, { name, role });
+      form.closest("section").classList.add("hidden");
+      showAlert("Usuario actualizado", "success");
+      await renderUsers(search?.value || "");
+    } catch (error) {
+      console.error("[Admin] Error actualizando usuario:", error);
+      showAlert("No se pudo actualizar el usuario", "error");
+    }
   });
 
   document.getElementById("cancelEditUser")?.addEventListener("click", () => {

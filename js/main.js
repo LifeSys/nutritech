@@ -27,7 +27,11 @@ window.addEventListener("unhandledrejection", (event) => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
-  initNavigation();
+  try {
+    initNavigation();
+  } catch (error) {
+    console.error("[NutriTech] Error iniciando navegación:", error);
+  }
 
   const page = document.body.dataset.page;
   const initPage = pageInitializers[page];

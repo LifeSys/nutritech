@@ -33,9 +33,15 @@ async function buildPostCard(post, currentUser) {
 
   card.querySelector("[data-like-id]").addEventListener("click", async (event) => {
     const button = event.currentTarget;
-    await addLike(post.id);
-    const currentLikes = Number(button.textContent.replace(/[^0-9]/g, "")) || 0;
-    button.textContent = `❤️ ${currentLikes + 1}`;
+    try {
+      console.log("[Comunidad] Like en post:", post.id);
+      await addLike(post.id);
+      const currentLikes = Number(button.textContent.replace(/[^0-9]/g, "")) || 0;
+      button.textContent = `❤️ ${currentLikes + 1}`;
+    } catch (error) {
+      console.error("[Comunidad] Error en like:", error);
+      showAlert("No se pudo registrar el like", "error");
+    }
   });
 
   card.querySelector("[data-comment-toggle]").addEventListener("click", () => {
@@ -44,9 +50,15 @@ async function buildPostCard(post, currentUser) {
 
   card.querySelector("[data-share-post]").addEventListener("click", async () => {
     const shareUrl = `${window.location.origin}/comunidad.html?post=${post.id}`;
-    await navigator.clipboard.writeText(shareUrl);
-    await saveShareLink(post.id);
-    showAlert("Link copiado al portapapeles", "success");
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      await saveShareLink(post.id);
+      showAlert("Link copiado al portapapeles", "success");
+    } catch (error) {
+      console.error("[Comunidad] Error compartiendo, usando fallback:", error);
+      window.prompt("Copia este enlace", shareUrl);
+      showAlert("No se pudo copiar automáticamente. Usa el enlace mostrado.", "info");
+    }
   });
 
   card.querySelector("[data-comment-form]").addEventListener("submit", async (event) => {
@@ -56,17 +68,22 @@ async function buildPostCard(post, currentUser) {
     const text = input.value.trim();
     if (!text) return;
 
-    await createComment({
-      postId: post.id,
-      userId: currentUser.uid,
-      userEmail: currentUser.email,
-      text
-    });
+    try {
+      await createComment({
+        postId: post.id,
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        text
+      });
 
-    const list = card.querySelector("ul");
-    list.insertAdjacentHTML("beforeend", renderComment({ userEmail: currentUser.email, text }));
-    input.value = "";
-    showAlert("Comentario agregado", "success");
+      const list = card.querySelector("ul");
+      list.insertAdjacentHTML("beforeend", renderComment({ userEmail: currentUser.email, text }));
+      input.value = "";
+      showAlert("Comentario agregado", "success");
+    } catch (error) {
+      console.error("[Comunidad] Error agregando comentario:", error);
+      showAlert("No se pudo agregar el comentario", "error");
+    }
   });
 
   return card;
@@ -118,11 +135,15 @@ export async function initComunidadModule() {
     }
 
     try {
+      console.log("[Comunidad] Publicando nuevo post");
       setButtonLoading(postBtn, true, "Publicando...");
       await createPost({ text, userId: user.uid, userEmail: user.email });
       postInput.value = "";
       await renderFeed(user);
       showAlert("Publicación creada", "success");
+    } catch (error) {
+      console.error("[Comunidad] Error publicando:", error);
+      showAlert("No se pudo publicar. Intenta nuevamente.", "error");
     } finally {
       setButtonLoading(postBtn, false);
     }
