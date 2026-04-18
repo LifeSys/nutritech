@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard NutriTech</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+body { font-family: 'Inter', sans-serif; background:#f6f8fc; }
+h1,h2 { font-family: 'Manrope', sans-serif; }
+.card { background:white; border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
+.active-nav { background:white; color:#059669; font-weight:600; }
+</style>
+</head>
+<script src="js/app.js"></script>
+<body class="flex">
+
+<!-- SIDEBAR -->
+<aside class="w-64 h-screen bg-[#eef3ff] p-6 flex flex-col">
+
+<div class="flex items-center gap-3 mb-10">
+<div class="bg-green-500 text-white p-2 rounded-xl">📊</div>
+<div>
+<h2 class="font-bold text-green-700">NutriTech Dash</h2>
+<p class="text-xs text-gray-400">Precisión Vital</p>
+</div>
+</div>
+
+<nav class="flex flex-col gap-2">
+<a class="p-3 rounded-xl active-nav">Resumen</a>
+<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Biometría</a>
+<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Nutrición</a>
+<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Progreso</a>
+<a class="p-3 rounded-xl hover:bg-white cursor-pointer" onclick="goTo('comunidad.html')">Comunidad</a>
+<a class="p-3 rounded-xl hover:bg-white cursor-pointer" onclick="goTo('admin.html')">Admin</a>
+</nav>
+
+<button onclick="alert('Nueva consulta creada')" 
+class="mt-auto bg-green-600 text-white py-3 rounded-xl">
+Nueva Consulta
+</button>
+
+<button onclick="goTo('index.html')" class="mt-4 text-gray-500">
+Cerrar Sesión
+</button>
+
+</aside>
+
+<!-- MAIN -->
+<main class="flex-1 p-10">
+
+<!-- TOPBAR -->
+<div class="flex justify-between items-center mb-10">
+<h1 class="text-2xl font-bold text-green-700">
+Dashboard Gym Partner
+</h1>
+
+<div class="flex items-center gap-4">
+<input id="searchInput" placeholder="Buscar socio..."
+class="px-4 py-2 rounded-full bg-gray-100">
+
+<img src="img/USUARIO1.jpg" class="w-10 h-10 rounded-full">
+</div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="grid grid-cols-3 gap-6 mb-10">
+
+<div class="card">
+<p class="text-gray-400 text-sm">Estado de Retención</p>
+<h2 class="text-3xl font-bold">94.2%</h2>
+<p class="text-green-600 text-sm">+2.4% este mes</p>
+</div>
+
+<div class="card bg-blue-600 text-white">
+<p>Socios Activos</p>
+<h2 class="text-3xl">1,284</h2>
+</div>
+
+<div class="card">
+<p>Adherencia a Planes</p>
+<h2 class="text-3xl text-green-600">78%</h2>
+</div>
+
+</div>
+
+<!-- GRID PRINCIPAL -->
+<div class="grid grid-cols-3 gap-8">
+
+<!-- CLIENTES -->
+<div class="col-span-2 card">
+
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-xl font-bold">Gestión de Clientes</h2>
+<button onclick="alert('Ver todos')" class="text-green-600">Ver todos</button>
+</div>
+
+<div class="space-y-4" id="clientesList">
+
+<!-- CLIENTE -->
+<div class="flex justify-between items-center cliente">
+<div class="flex gap-4 items-center">
+<img src="img/USUARIO2.jpg" class="w-12 h-12 rounded-lg">
+<div>
+<p class="font-bold">Elena Rodriguez</p>
+<p class="text-xs text-gray-400">Plan Hipertrofia</p>
+</div>
+</div>
+<span class="text-green-600">-4.2kg</span>
+</div>
+
+<div class="flex justify-between items-center cliente">
+<div class="flex gap-4 items-center">
+<img src="img/USUARIO3.jpg" class="w-12 h-12 rounded-lg">
+<div>
+<p class="font-bold">Marco Aurelio</p>
+<p class="text-xs text-gray-400">Plan Definición</p>
+</div>
+</div>
+<span class="text-red-500">Riesgo</span>
+</div>
+
+<div class="flex justify-between items-center cliente">
+<div class="flex gap-4 items-center">
+<img src="img/USUARIO4.jpg" class="w-12 h-12 rounded-lg">
+<div>
+<p class="font-bold">Clara Valls</p>
+<p class="text-xs text-gray-400">Plan Recomposición</p>
+</div>
+</div>
+<span class="text-green-600">OK</span>
+</div>
+
+</div>
+
+</div>
+
+<!-- PANEL DERECHO -->
+<div class="space-y-6">
+
+<!-- REPORTES -->
+<div class="card">
+<h3 class="font-bold mb-4">Generar Informes</h3>
+
+<div class="bg-gray-100 p-4 rounded mb-2 flex justify-between items-center">
+<span>Rendimiento Mensual</span>
+<button onclick="generarReporte()">⬇</button>
+</div>
+
+<div class="bg-gray-100 p-4 rounded flex justify-between items-center">
+<span>Demografía</span>
+<button onclick="generarReporte()">⬇</button>
+</div>
+
+<button onclick="alert('Nuevo reporte')" 
+class="mt-4 border border-green-500 text-green-600 w-full py-2 rounded">
+Configurar nuevo reporte
+</button>
+
+</div>
+
+<!-- PLAN -->
+<div class="bg-green-600 text-white p-6 rounded-xl">
+<h3 class="font-bold">Plan Corporate Elite</h3>
+<p class="text-2xl mt-2">€499 / mes</p>
+
+<button onclick="alert('Gestión de plan')" 
+class="bg-white text-green-600 px-4 py-2 rounded mt-4">
+Gestionar Plan
+</button>
+</div>
+
+</div>
+
+</div>
+
+</main>
+
+<!-- JS -->
+<script src="js/app.js"></script>
+
+<script>
+// BUSCADOR SIMPLE
+document.getElementById("searchInput").addEventListener("input", function(){
+let value = this.value.toLowerCase();
+let clientes = document.querySelectorAll(".cliente");
+
+clientes.forEach(c=>{
+let text = c.innerText.toLowerCase();
+c.style.display = text.includes(value) ? "flex" : "none";
+});
+});
+
+// SIMULACIÓN REPORTE
+function generarReporte(){
+alert("Reporte generado correctamente ✔");
+}
+</script>
+
+</body>
+</html>
