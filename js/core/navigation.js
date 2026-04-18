@@ -8,33 +8,42 @@ const PAGE_ROUTES = {
   recetas: "recetas.html"
 };
 
-export function navigateTo(path) {
+export function goTo(page) {
   try {
-    console.info("[NutriTech] Navegando a:", path);
-    window.location.href = path;
+    console.log("Redirigiendo a:", page);
+    window.location.href = page;
   } catch (error) {
     console.error("[NutriTech] Falló navegación:", error);
   }
 }
 
+export const navigateTo = goTo;
+
 export function initNavigation() {
   console.info("[NutriTech] initNavigation()");
+  document.querySelectorAll("[data-nav]").forEach((btn) => {
+    btn.addEventListener("click", (event) => {
+      event.preventDefault();
+      const page = btn.dataset.nav || btn.getAttribute("href");
+      if (!page) {
+        console.warn("[NutriTech] data-nav vacío:", btn);
+        return;
+      }
+      goTo(page);
+    });
+  });
   document.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-nav]");
     if (!trigger) return;
+    if (event.defaultPrevented) return;
 
     event.preventDefault();
-    console.log("[NutriTech] Click data-nav detectado:", trigger.dataset.nav);
-    const route = trigger.dataset.nav;
-    if (!route) {
-      console.warn("[NutriTech] data-nav vacío", trigger);
-      if (trigger.tagName === "A" && trigger.getAttribute("href")) {
-        window.location.href = trigger.getAttribute("href");
-      }
+    const page = trigger.dataset.nav || trigger.getAttribute("href");
+    if (!page) {
+      console.warn("[NutriTech] data-nav vacío:", trigger);
       return;
     }
-
-    navigateTo(route);
+    goTo(page);
   });
 
   const page = document.body.dataset.page;

@@ -35,9 +35,8 @@ async function buildPostCard(post, currentUser) {
     const button = event.currentTarget;
     try {
       console.log("[Comunidad] Like en post:", post.id);
-      await addLike(post.id);
-      const currentLikes = Number(button.textContent.replace(/[^0-9]/g, "")) || 0;
-      button.textContent = `❤️ ${currentLikes + 1}`;
+      const updatedLikes = await addLike(post.id);
+      button.textContent = `❤️ ${updatedLikes}`;
     } catch (error) {
       console.error("[Comunidad] Error en like:", error);
       showAlert("No se pudo registrar el like", "error");
@@ -112,10 +111,6 @@ async function renderFeed(user) {
 export async function initComunidadModule() {
   const user = await requireAuth();
   if (!user) return;
-  if (!user.onboardingCompleted) {
-    navigateTo("onboarding.html");
-    return;
-  }
 
   setUserEmailLabels(user.email);
 

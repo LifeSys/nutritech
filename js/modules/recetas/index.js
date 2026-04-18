@@ -6,16 +6,16 @@ const recipeVariants = [
   [
     { title: "Ensalada proteica", description: "Atún, garbanzos, espinaca y aguacate." },
     { title: "Pollo con quinoa", description: "Pollo grillado con quinoa tricolor y brócoli." },
-    { title: "Batido energético", description: "Banano, avena, mantequilla de maní y leche vegetal." },
-    { title: "Desayuno fitness", description: "Yogur griego, frutos rojos y semillas de chía." },
+    { title: "Smoothie fitness", description: "Banano, avena, mantequilla de maní y leche vegetal." },
+    { title: "Desayuno saludable", description: "Yogur griego, frutos rojos y semillas de chía." },
     { title: "Cena ligera", description: "Salmón al horno con ensalada mediterránea." }
   ],
   [
-    { title: "Tostadas power", description: "Pan integral, huevos revueltos y tomate cherry." },
-    { title: "Wrap keto", description: "Tortilla de lechuga con pavo y queso bajo en grasa." },
-    { title: "Bowl vegano", description: "Tofu, arroz integral y vegetales salteados." },
-    { title: "Snack pre-entreno", description: "Dátiles rellenos con crema de almendras." },
-    { title: "Sopa detox", description: "Calabacín, apio y jengibre fresco." }
+    { title: "Ensalada proteica", description: "Atún, garbanzos, espinaca y aguacate con limón." },
+    { title: "Pollo con quinoa", description: "Pollo especiado con quinoa tricolor y kale." },
+    { title: "Smoothie fitness", description: "Fresa, yogur griego, avena y proteína de vainilla." },
+    { title: "Desayuno saludable", description: "Avena nocturna con fruta fresca y semillas." },
+    { title: "Cena ligera", description: "Merluza al vapor con ensalada verde y pepino." }
   ]
 ];
 
@@ -43,7 +43,6 @@ export async function initRecetasModule() {
     try {
       console.log("[Recetas] Actualizando recomendaciones");
       setButtonLoading(refreshBtn, true, "Actualizando...");
-      await new Promise((resolve) => window.setTimeout(resolve, 500));
       variantIndex = (variantIndex + 1) % recipeVariants.length;
       renderRecipes(recipeVariants[variantIndex]);
 

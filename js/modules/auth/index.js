@@ -1,13 +1,12 @@
 import { loginUser, registerUser, watchAuthState } from "../../services/authService.js";
-import { getUserById } from "../../services/userService.js";
 import { navigateTo } from "../../core/navigation.js";
 import { showAlert, setButtonLoading } from "../../core/ui.js";
 
 export async function initAuthModule() {
   const existing = await watchAuthState();
   if (existing) {
-    const profile = await getUserById(existing.uid);
-    navigateTo(profile?.onboardingCompleted ? "dashboard.html" : "onboarding.html");
+    console.log("[Auth] Sesión activa detectada. Redirigiendo a dashboard.");
+    navigateTo("dashboard.html");
     return;
   }
 
@@ -52,9 +51,11 @@ export async function initAuthModule() {
       return;
     }
 
+    console.log("Intentando login...");
     try {
       setButtonLoading(submitBtn, true);
-      let user;
+      let user = null;
+
       if (mode === "register") {
         if (!nameInput.value.trim()) {
           showAlert("El nombre es obligatorio", "error");
@@ -65,9 +66,18 @@ export async function initAuthModule() {
         user = await loginUser({ email, password });
       }
 
-      const profile = await getUserById(user.uid);
+      console.log("Usuario logueado:", user);
+      if (!user) {
+        alert("No se pudo obtener el usuario");
+        return;
+      }
+
       showAlert("Autenticación completada", "success");
-      window.setTimeout(() => navigateTo(profile?.onboardingCompleted ? "dashboard.html" : "onboarding.html"), 500);
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      console.error("Error en login:", error);
+      alert(error.message || "Error en login");
+      showAlert(error.message || "Error en login", "error");
     } finally {
       setButtonLoading(submitBtn, false);
     }

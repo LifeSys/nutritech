@@ -6,6 +6,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  getDoc,
   increment,
   query,
   orderBy,
@@ -32,6 +33,8 @@ export async function listPosts() {
 
 export async function addLike(postId) {
   await updateDoc(doc(db, "posts", postId), { likes: increment(1), updatedAt: serverTimestamp() });
+  const updated = await getDoc(doc(db, "posts", postId));
+  return updated.exists() ? Number(updated.data().likes || 0) : 0;
 }
 
 export async function createComment({ postId, userId, userEmail, text }) {

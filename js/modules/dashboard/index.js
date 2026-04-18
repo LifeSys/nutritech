@@ -22,10 +22,6 @@ function initDashboardSections() {
 export async function initDashboardModule() {
   const user = await requireAuth();
   if (!user) return;
-  if (!user.onboardingCompleted) {
-    navigateTo("onboarding.html");
-    return;
-  }
 
   setUserEmailLabels(user.email);
   initDashboardSections();
