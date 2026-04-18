@@ -16,7 +16,54 @@ h1,h2 { font-family:'Manrope'; }
 </style>
 
 </head>
-<script src="js/app.js"></script>
+<script type="module">
+
+import { db, collection, addDoc, getDocs } from './js/firebase.js';
+
+// PUBLICAR POST
+window.addPost = async function(){
+    const input = document.getElementById("postInput");
+
+    if(input.value.trim() === "") return;
+
+    await addDoc(collection(db, "posts"), {
+        text: input.value,
+        date: new Date().toLocaleString(),
+        likes: 0
+    });
+
+    input.value = "";
+    loadPosts();
+}
+
+// CARGAR POSTS
+async function loadPosts(){
+    const feed = document.getElementById("feed");
+    feed.innerHTML = "";
+
+    const snapshot = await getDocs(collection(db, "posts"));
+
+    snapshot.forEach(doc => {
+        const data = doc.data();
+
+        const div = document.createElement("div");
+        div.className = "card";
+
+        div.innerHTML = `
+            <p class="text-gray-400 text-sm">${data.date}</p>
+            <p>${data.text}</p>
+            <img src="img/FRUTAS.jpg" class="rounded mt-2">
+            <div class="mt-2">❤️ ${data.likes}</div>
+        `;
+
+        feed.appendChild(div);
+    });
+}
+
+// INICIAR
+loadPosts();
+
+</script>
 <body>
 
 <!-- NAVBAR -->
