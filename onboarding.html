@@ -3,129 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Onboarding - NutriTech</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
-body {
-    font-family: 'Inter', sans-serif;
-    background: #f8f9ff;
-}
-h1 {
-    font-family: 'Manrope', sans-serif;
-}
-.selected {
-    background: linear-gradient(135deg, #059669, #10b981);
-    color: white;
-    transform: scale(1.05);
-}
+body { font-family: 'Inter', sans-serif; background: #f8f9ff; }
+h1 { font-family: 'Manrope', sans-serif; }
+.selected { background: linear-gradient(135deg, #059669, #10b981); color: white; transform: scale(1.05); }
 </style>
 </head>
-<body>
-
-<!-- HEADER -->
+<body data-page="onboarding">
 <header class="flex justify-between items-center px-10 py-6">
     <h2 class="text-xl font-bold text-green-700">NutriTech Solutions</h2>
     <span class="text-gray-500 text-sm">Paso 1 de 3</span>
 </header>
 
-<!-- CONTENIDO -->
 <section class="px-10 pt-10">
+    <div id="globalAlert" class="hidden mb-4"></div>
+    <h1 class="text-5xl font-extrabold mb-6">Define tu visión de <span class="text-green-600">bienestar</span></h1>
+    <p class="text-gray-500 mb-10 max-w-xl">Personalizamos tu experiencia basándonos en tus objetivos.</p>
 
-    <h1 class="text-5xl font-extrabold mb-6">
-        Define tu visión de <span class="text-green-600">bienestar</span>
-    </h1>
-
-    <p class="text-gray-500 mb-10 max-w-xl">
-        Personalizamos tu experiencia basándonos en tus objetivos.
-    </p>
-
-    <!-- OPCIONES -->
     <div class="grid md:grid-cols-3 gap-6">
-
-        <!-- OPCIÓN 1 -->
-        <div onclick="selectGoal(this,'Perder peso')" 
-             class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition">
+        <button type="button" data-goal="Perder peso" class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition text-left">
             <h3 class="font-bold text-lg mb-2">Perder Peso</h3>
-            <p class="text-gray-500 text-sm">
-                Reducción de grasa corporal con control nutricional.
-            </p>
-        </div>
-
-        <!-- OPCIÓN 2 -->
-        <div onclick="selectGoal(this,'Ganar músculo')" 
-             class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition">
+            <p class="text-gray-500 text-sm">Reducción de grasa corporal con control nutricional.</p>
+        </button>
+        <button type="button" data-goal="Ganar músculo" class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition text-left">
             <h3 class="font-bold text-lg mb-2">Ganar Músculo</h3>
-            <p class="text-gray-500 text-sm">
-                Optimización de masa muscular y fuerza.
-            </p>
-        </div>
-
-        <!-- OPCIÓN 3 -->
-        <div onclick="selectGoal(this,'Hábitos saludables')" 
-             class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition">
+            <p class="text-gray-500 text-sm">Optimización de masa muscular y fuerza.</p>
+        </button>
+        <button type="button" data-goal="Hábitos saludables" class="goal bg-white p-8 rounded-2xl shadow cursor-pointer transition text-left">
             <h3 class="font-bold text-lg mb-2">Hábitos Saludables</h3>
-            <p class="text-gray-500 text-sm">
-                Mejora tu estilo de vida y energía diaria.
-            </p>
-        </div>
-
+            <p class="text-gray-500 text-sm">Mejora tu estilo de vida y energía diaria.</p>
+        </button>
     </div>
 
-    <!-- BOTONES -->
     <div class="flex justify-between items-center mt-16">
-
-        <button onclick="goBack()" class="text-gray-500">
-            ← Atrás
-        </button>
-
-        <button onclick="continueFlow()" 
-                class="bg-green-600 text-white px-8 py-3 rounded-full font-bold">
-            Continuar
-        </button>
-
+        <button type="button" onclick="goTo('index.html')" class="text-gray-500">← Atrás</button>
+        <button id="continueOnboardingBtn" type="button" class="bg-green-600 text-white px-8 py-3 rounded-full font-bold">Continuar</button>
     </div>
-
 </section>
 
-<!-- JS -->
-<script>
-
-// Guardar selección
-let selectedGoal = null;
-
-function selectGoal(el, goal){
-    selectedGoal = goal;
-
-    document.querySelectorAll(".goal").forEach(g=>{
-        g.classList.remove("selected");
-    });
-
-    el.classList.add("selected");
-
-    localStorage.setItem("goal", goal);
-}
-
-// Continuar
-function continueFlow(){
-    if(!selectedGoal){
-        alert("Selecciona una opción primero");
-        return;
-    }
-
-    window.location.href = "dashboard.html";
-}
-
-// Atrás
-function goBack(){
-    window.location.href = "index.html";
-}
-
-</script>
-
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
