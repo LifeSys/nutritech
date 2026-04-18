@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Admin - NutriTech</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -16,13 +14,11 @@ h1,h2 { font-family:'Manrope'; }
 .card { background:white; border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
 </style>
 </head>
-<script src="js/app.js"></script>
-<body class="flex">
+<body data-page="admin" class="flex">
 
-<!-- SIDEBAR -->
 <aside class="w-64 h-screen bg-[#eef3ff] p-6 flex flex-col">
-
 <h2 class="text-green-700 font-bold mb-6">NutriTech Admin</h2>
+<div class="text-xs text-gray-500 mb-6">Sesión: <span data-user-email class="font-semibold text-green-700"></span></div>
 
 <nav class="flex flex-col gap-2">
 <div class="p-3 bg-white rounded-xl text-green-600 font-bold">Resumen</div>
@@ -31,174 +27,58 @@ h1,h2 { font-family:'Manrope'; }
 <div class="p-3 hover:bg-white rounded-xl cursor-pointer">Seguridad</div>
 </nav>
 
-<button onclick="goTo('dashboard.html')" 
+<button onclick="window.location.href='dashboard.html'"
 class="mt-auto bg-green-600 text-white p-3 rounded-xl">
 Volver Dashboard
 </button>
-
+<button id="logoutBtn" class="mt-4 text-gray-500">Cerrar sesión</button>
 </aside>
 
-<!-- MAIN -->
 <main class="flex-1 p-10">
+<div id="globalAlert" class="hidden mb-4"></div>
 
-<!-- HEADER -->
 <div class="flex justify-between items-center mb-10">
-<h1 class="text-2xl font-bold text-green-700">
-Panel de Control Global
-</h1>
-
-<input placeholder="Buscar usuario..."
-class="px-4 py-2 rounded-full bg-gray-100">
+<h1 class="text-2xl font-bold text-green-700">Panel de Control Global</h1>
+<input placeholder="Buscar usuario..." class="px-4 py-2 rounded-full bg-gray-100">
 </div>
 
-<!-- KPI -->
 <div class="grid grid-cols-3 gap-6 mb-10">
-
 <div class="card">
 <p>Uptime</p>
 <h2 class="text-3xl font-bold">99.98%</h2>
 </div>
-
 <div class="card">
 <p>Usuarios</p>
-<h2 class="text-3xl font-bold">24,592</h2>
+<h2 id="kpiUsers" class="text-3xl font-bold">0</h2>
+</div>
+<div class="card">
+<p>Posts</p>
+<h2 id="kpiPosts" class="text-3xl font-bold">0</h2>
+</div>
 </div>
 
 <div class="card">
-<p>Consultas</p>
-<h2 class="text-3xl font-bold">1,840</h2>
-</div>
-
-</div>
-
-<!-- TABLA -->
-<div class="card">
-
 <div class="flex justify-between mb-4">
 <h2 class="font-bold text-lg">Gestión de Usuarios</h2>
-
-<button onclick="addUser()" 
-class="bg-green-600 text-white px-4 py-2 rounded-full">
-+ Añadir Usuario
-</button>
+<button id="addUserBtn" class="bg-green-600 text-white px-4 py-2 rounded-full">+ Añadir Usuario</button>
 </div>
 
 <table class="w-full text-left">
 <thead>
 <tr class="text-gray-400 text-sm">
 <th>Usuario</th>
+<th>Email</th>
 <th>Rol</th>
 <th>Estado</th>
 <th>Acciones</th>
 </tr>
 </thead>
-
-<tbody id="userTable">
-
-<tr>
-<td>Marcos V.</td>
-<td>Admin</td>
-<td class="text-green-600">Activo</td>
-<td>
-<button onclick="editUser(this)">✏</button>
-<button onclick="deleteUser(this)">🗑</button>
-</td>
-</tr>
-
-<tr>
-<td>Lucía R.</td>
-<td>Nutricionista</td>
-<td class="text-green-600">Activo</td>
-<td>
-<button onclick="editUser(this)">✏</button>
-<button onclick="deleteUser(this)">🗑</button>
-</td>
-</tr>
-
-</tbody>
-
+<tbody id="userTable"></tbody>
 </table>
-
+<div id="usersEmpty" class="hidden text-center text-gray-500 py-6">No hay usuarios para mostrar.</div>
 </div>
-
-<!-- CONFIG -->
-<div class="grid grid-cols-2 gap-6 mt-10">
-
-<div class="card">
-<h3 class="font-bold mb-4">Configuración</h3>
-
-<div class="flex justify-between mb-2">
-<span>Mantenimiento</span>
-<input type="checkbox">
-</div>
-
-<div class="flex justify-between">
-<span>Logs avanzados</span>
-<input type="checkbox" checked>
-</div>
-
-</div>
-
-<div class="card bg-black text-green-400 font-mono">
-<p>> Sistema seguro</p>
-<p>> Conectado a DB</p>
-<p>> Sin amenazas</p>
-
-<button onclick="alert('Auditoría ejecutada')" 
-class="mt-4 bg-green-600 text-white px-4 py-2 rounded">
-Ejecutar auditoría
-</button>
-</div>
-
-</div>
-
 </main>
 
-<!-- JS -->
-<script>
-
-function goTo(page){
-window.location.href = page;
-}
-
-// Añadir usuario
-function addUser(){
-let name = prompt("Nombre del usuario");
-if(!name) return;
-
-let table = document.getElementById("userTable");
-
-let row = document.createElement("tr");
-
-row.innerHTML = `
-<td>${name}</td>
-<td>Usuario</td>
-<td class="text-green-600">Activo</td>
-<td>
-<button onclick="editUser(this)">✏</button>
-<button onclick="deleteUser(this)">🗑</button>
-</td>
-`;
-
-table.appendChild(row);
-}
-
-// Editar
-function editUser(btn){
-let row = btn.parentElement.parentElement;
-let name = prompt("Nuevo nombre:", row.children[0].innerText);
-
-if(name){
-row.children[0].innerText = name;
-}
-}
-
-// Eliminar
-function deleteUser(btn){
-btn.parentElement.parentElement.remove();
-}
-
-</script>
-
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
