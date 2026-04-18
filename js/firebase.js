@@ -12,7 +12,9 @@ import {
   serverTimestamp,
   increment,
   query,
-  orderBy
+  orderBy,
+  where,
+  limit
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import {
   getAuth,
@@ -51,6 +53,8 @@ export {
   increment,
   query,
   orderBy,
+  where,
+  limit,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,

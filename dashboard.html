@@ -4,20 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard NutriTech</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
 body { font-family: 'Inter', sans-serif; background:#f6f8fc; }
 h1,h2 { font-family: 'Manrope', sans-serif; }
 .card { background:white; border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
 .active-nav { background:white; color:#059669; font-weight:600; }
+.nav-link-active { color: #047857; font-weight: 700; }
 </style>
 </head>
 <body data-page="dashboard" class="flex">
-
 <aside class="w-64 h-screen bg-[#eef3ff] p-6 flex flex-col">
 <div class="flex items-center gap-3 mb-10">
 <div class="bg-green-500 text-white p-2 rounded-xl">📊</div>
@@ -27,101 +24,60 @@ h1,h2 { font-family: 'Manrope', sans-serif; }
 </div>
 </div>
 
-<nav class="flex flex-col gap-2">
-<a class="p-3 rounded-xl active-nav">Resumen</a>
-<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Biometría</a>
-<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Nutrición</a>
-<a class="p-3 rounded-xl hover:bg-white cursor-pointer">Progreso</a>
-<a class="p-3 rounded-xl hover:bg-white cursor-pointer" href="comunidad.html">Comunidad</a>
-<a class="p-3 rounded-xl hover:bg-white cursor-pointer" href="admin.html">Admin</a>
+<nav class="flex flex-col gap-2" id="dashboardMenu">
+<button type="button" data-dashboard-section="resumen" class="p-3 rounded-xl active-nav text-left">Resumen</button>
+<button type="button" data-dashboard-section="biometria" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Biometría</button>
+<button type="button" data-dashboard-section="nutricion" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Nutrición</button>
+<button type="button" data-dashboard-section="progreso" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Progreso</button>
+<button type="button" data-nav="planes.html" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Planes</button>
+<button type="button" data-nav="recetas.html" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Recetas</button>
+<button type="button" data-nav="comunidad.html" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Comunidad</button>
+<button type="button" data-nav="admin.html" class="p-3 rounded-xl hover:bg-white cursor-pointer text-left">Admin</button>
 </nav>
 
-<button class="mt-auto bg-green-600 text-white py-3 rounded-xl">Nueva Consulta</button>
-<button id="logoutBtn" class="mt-4 text-gray-500">Cerrar Sesión</button>
+<button id="newConsultBtn" type="button" class="mt-auto bg-green-600 text-white py-3 rounded-xl">Nueva Consulta</button>
+<button id="logoutBtn" type="button" class="mt-4 text-gray-500">Cerrar Sesión</button>
 </aside>
 
 <main class="flex-1 p-10">
 <div id="globalAlert" class="hidden mb-4"></div>
-
 <div class="flex justify-between items-center mb-10">
 <h1 class="text-2xl font-bold text-green-700">Dashboard Gym Partner</h1>
-
 <div class="flex items-center gap-4">
 <div class="text-sm text-gray-500">Sesión: <span data-user-email class="font-semibold text-green-700"></span></div>
-<img src="img/USUARIO1.jpg" class="w-10 h-10 rounded-full">
+<img src="img/USUARIO1.jpg" class="w-10 h-10 rounded-full" alt="Usuario">
 </div>
 </div>
 
+<section data-section="resumen" class="dashboard-section space-y-8">
 <div class="grid grid-cols-3 gap-6 mb-10">
-<div class="card">
-<p class="text-gray-400 text-sm">Total de Usuarios</p>
-<h2 id="totalUsers" class="text-3xl font-bold">0</h2>
-<p class="text-green-600 text-sm">Conectado a Firestore</p>
-</div>
-
-<div class="card bg-blue-600 text-white">
-<p>Total de Posts</p>
-<h2 id="totalPosts" class="text-3xl">0</h2>
-</div>
-
-<div class="card">
-<p>Actividad</p>
-<h2 id="activityInfo" class="text-base text-green-600">Cargando...</h2>
-</div>
+<div class="card"><p class="text-gray-400 text-sm">Total de Usuarios</p><h2 id="totalUsers" class="text-3xl font-bold">0</h2><p class="text-green-600 text-sm">Conectado a Firestore</p></div>
+<div class="card bg-blue-600 text-white"><p>Total de Posts</p><h2 id="totalPosts" class="text-3xl">0</h2></div>
+<div class="card"><p>Actividad</p><h2 id="activityInfo" class="text-base text-green-600">Cargando...</h2></div>
 </div>
 
 <div class="grid grid-cols-3 gap-8">
 <div class="col-span-2 card">
-<div class="flex justify-between items-center mb-4">
-<h2 class="text-xl font-bold">Gestión de Clientes</h2>
-<button class="text-green-600">Ver todos</button>
-</div>
-
+<div class="flex justify-between items-center mb-4"><h2 class="text-xl font-bold">Gestión de Clientes</h2><button id="seeAllClientsBtn" type="button" class="text-green-600">Ver todos</button></div>
 <div class="space-y-4" id="clientesList">
-<div class="flex justify-between items-center cliente">
-<div class="flex gap-4 items-center">
-<img src="img/USUARIO2.jpg" class="w-12 h-12 rounded-lg">
-<div>
-<p class="font-bold">Elena Rodriguez</p>
-<p class="text-xs text-gray-400">Plan Hipertrofia</p>
+<div class="flex justify-between items-center cliente"><div class="flex gap-4 items-center"><img src="img/USUARIO2.jpg" class="w-12 h-12 rounded-lg" alt="Cliente"><div><p class="font-bold">Elena Rodriguez</p><p class="text-xs text-gray-400">Plan Hipertrofia</p></div></div><span class="text-green-600">-4.2kg</span></div>
+<div class="flex justify-between items-center cliente"><div class="flex gap-4 items-center"><img src="img/USUARIO3.jpg" class="w-12 h-12 rounded-lg" alt="Cliente"><div><p class="font-bold">Marco Aurelio</p><p class="text-xs text-gray-400">Plan Definición</p></div></div><span class="text-red-500">Riesgo</span></div>
 </div>
 </div>
-<span class="text-green-600">-4.2kg</span>
-</div>
-
-<div class="flex justify-between items-center cliente">
-<div class="flex gap-4 items-center">
-<img src="img/USUARIO3.jpg" class="w-12 h-12 rounded-lg">
-<div>
-<p class="font-bold">Marco Aurelio</p>
-<p class="text-xs text-gray-400">Plan Definición</p>
-</div>
-</div>
-<span class="text-red-500">Riesgo</span>
-</div>
-</div>
-</div>
-
 <div class="space-y-6">
 <div class="card">
 <h3 class="font-bold mb-4">Generar Informes</h3>
-<div class="bg-gray-100 p-4 rounded mb-2 flex justify-between items-center">
-<span>Rendimiento Mensual</span>
-<button>⬇</button>
+<div class="bg-gray-100 p-4 rounded mb-2 flex justify-between items-center"><span>Rendimiento Mensual</span><button type="button" class="download-report" data-report="Rendimiento Mensual">⬇</button></div>
+<div class="bg-gray-100 p-4 rounded flex justify-between items-center"><span>Demografía</span><button type="button" class="download-report" data-report="Demografía">⬇</button></div>
 </div>
-<div class="bg-gray-100 p-4 rounded flex justify-between items-center">
-<span>Demografía</span>
-<button>⬇</button>
+<div class="bg-green-600 text-white p-6 rounded-xl"><h3 class="font-bold">Plan Corporate Elite</h3><p class="text-2xl mt-2">€499 / mes</p><button type="button" data-nav="planes.html" class="mt-3 bg-white text-green-700 px-3 py-2 rounded-lg font-semibold">Ver planes</button></div>
 </div>
 </div>
+</section>
 
-<div class="bg-green-600 text-white p-6 rounded-xl">
-<h3 class="font-bold">Plan Corporate Elite</h3>
-<p class="text-2xl mt-2">€499 / mes</p>
-</div>
-</div>
-</div>
-
+<section data-section="biometria" class="dashboard-section hidden"><div class="card"><h2 class="text-xl font-bold mb-3">Biometría</h2><p class="text-gray-600">Tu biometría se sincroniza automáticamente. Próxima actualización en 24 horas.</p></div></section>
+<section data-section="nutricion" class="dashboard-section hidden"><div class="card"><h2 class="text-xl font-bold mb-3">Nutrición</h2><p class="text-gray-600">Explora recomendaciones en <button type="button" class="text-green-700 font-semibold" data-nav="recetas.html">Recetas</button> y ajusta tu plan en <button type="button" class="text-green-700 font-semibold" data-nav="planes.html">Planes</button>.</p></div></section>
+<section data-section="progreso" class="dashboard-section hidden"><div class="card"><h2 class="text-xl font-bold mb-3">Progreso</h2><p class="text-gray-600">Has mantenido una racha de seguimiento de 12 días. ¡Excelente consistencia!</p></div></section>
 </main>
 
 <script type="module" src="js/app.js"></script>

@@ -4,38 +4,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comunidad NutriTech</title>
-
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
 body { font-family: 'Inter', sans-serif; background:#f6f8fc; }
 h1,h2 { font-family:'Manrope'; }
 .card { background:white; border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
+.nav-link-active { color: #047857; font-weight: 700; }
 </style>
 </head>
 <body data-page="comunidad">
-
 <header class="flex justify-between items-center px-10 py-4 bg-white shadow">
 <h1 class="text-green-700 font-bold text-xl">NutriTech Solutions</h1>
-
-<nav class="flex gap-6">
-<a href="dashboard.html">Dashboard</a>
-<a href="#">Planes</a>
-<a href="#">Recetas</a>
-<a class="text-green-600 font-bold">Comunidad</a>
+<nav class="flex gap-6" data-main-nav>
+<button type="button" data-nav="dashboard.html">Dashboard</button>
+<button type="button" data-nav="planes.html">Planes</button>
+<button type="button" data-nav="recetas.html">Recetas</button>
+<button type="button" data-nav="comunidad.html">Comunidad</button>
 </nav>
-
 <div class="flex items-center gap-4">
 <div class="text-sm text-gray-500"><span data-user-email class="font-semibold text-green-700"></span></div>
-<button id="logoutBtn" class="bg-green-600 text-white px-4 py-2 rounded-full">Cerrar sesión</button>
+<button id="logoutBtn" type="button" class="bg-green-600 text-white px-4 py-2 rounded-full">Cerrar sesión</button>
 </div>
 </header>
 
 <main class="grid grid-cols-4 gap-6 p-10">
 <div class="col-span-1 space-y-6">
 <div class="card text-center">
-<img src="img/USUARIO1.jpg" class="w-20 h-20 rounded-full mx-auto mb-3">
+<img src="img/USUARIO1.jpg" class="w-20 h-20 rounded-full mx-auto mb-3" alt="Comunidad">
 <h3 class="font-bold">Comunidad NutriTech</h3>
 <p class="text-gray-400 text-sm">Conecta con usuarios reales</p>
 </div>
@@ -43,21 +39,15 @@ h1,h2 { font-family:'Manrope'; }
 
 <div class="col-span-2 space-y-6">
 <div id="globalAlert" class="hidden"></div>
-
 <div class="card">
 <form id="postForm">
-<textarea id="postInput" placeholder="Comparte tus logros..."
-class="w-full p-3 border rounded mb-3"></textarea>
-
+<textarea id="postInput" placeholder="Comparte tus logros..." class="w-full p-3 border rounded mb-3"></textarea>
 <div class="flex justify-between">
 <span class="text-gray-400 text-sm">Foto | Logro</span>
-<button id="postBtn" type="submit" class="bg-green-600 text-white px-4 py-2 rounded-full">
-Publicar
-</button>
+<button id="postBtn" type="submit" class="bg-green-600 text-white px-4 py-2 rounded-full">Publicar</button>
 </div>
 </form>
 </div>
-
 <div id="feed" class="space-y-4"></div>
 <div id="feedEmpty" class="hidden card text-center text-gray-500">Aún no hay publicaciones. Sé el primero en publicar.</div>
 </div>
@@ -66,11 +56,9 @@ Publicar
 <div class="card">
 <h3 class="font-bold mb-3">Tendencias</h3>
 <ul class="text-sm space-y-2">
-<li>#RetoHidratación</li>
-<li>#KetoFriendly</li>
-<li>#Vitalismo2026</li>
-<li>#AyunoIntermitente</li>
+<li>#RetoHidratación</li><li>#KetoFriendly</li><li>#Vitalismo2026</li><li>#AyunoIntermitente</li>
 </ul>
+<button type="button" data-nav="recetas.html" class="mt-4 w-full bg-green-600 text-white py-2 rounded-lg">Ver recetas tendencia</button>
 </div>
 </div>
 </main>
