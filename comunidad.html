@@ -6,7 +6,6 @@
 <title>Comunidad NutriTech</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -14,59 +13,9 @@ body { font-family: 'Inter', sans-serif; background:#f6f8fc; }
 h1,h2 { font-family:'Manrope'; }
 .card { background:white; border-radius:16px; padding:20px; box-shadow:0 6px 20px rgba(0,0,0,0.05); }
 </style>
-
 </head>
-<script type="module">
+<body data-page="comunidad">
 
-import { db, collection, addDoc, getDocs } from './js/firebase.js';
-
-// PUBLICAR POST
-window.addPost = async function(){
-    const input = document.getElementById("postInput");
-
-    if(input.value.trim() === "") return;
-
-    await addDoc(collection(db, "posts"), {
-        text: input.value,
-        date: new Date().toLocaleString(),
-        likes: 0
-    });
-
-    input.value = "";
-    loadPosts();
-}
-
-// CARGAR POSTS
-async function loadPosts(){
-    const feed = document.getElementById("feed");
-    feed.innerHTML = "";
-
-    const snapshot = await getDocs(collection(db, "posts"));
-
-    snapshot.forEach(doc => {
-        const data = doc.data();
-
-        const div = document.createElement("div");
-        div.className = "card";
-
-        div.innerHTML = `
-            <p class="text-gray-400 text-sm">${data.date}</p>
-            <p>${data.text}</p>
-            <img src="img/FRUTAS.jpg" class="rounded mt-2">
-            <div class="mt-2">❤️ ${data.likes}</div>
-        `;
-
-        feed.appendChild(div);
-    });
-}
-
-// INICIAR
-loadPosts();
-
-</script>
-<body>
-
-<!-- NAVBAR -->
 <header class="flex justify-between items-center px-10 py-4 bg-white shadow">
 <h1 class="text-green-700 font-bold text-xl">NutriTech Solutions</h1>
 
@@ -77,155 +26,55 @@ loadPosts();
 <a class="text-green-600 font-bold">Comunidad</a>
 </nav>
 
-<button onclick="goTo('dashboard.html')" class="bg-green-600 text-white px-4 py-2 rounded-full">
-Mi Perfil
-</button>
+<div class="flex items-center gap-4">
+<div class="text-sm text-gray-500"><span data-user-email class="font-semibold text-green-700"></span></div>
+<button id="logoutBtn" class="bg-green-600 text-white px-4 py-2 rounded-full">Cerrar sesión</button>
+</div>
 </header>
 
-<!-- GRID -->
 <main class="grid grid-cols-4 gap-6 p-10">
-
-<!-- PERFIL -->
 <div class="col-span-1 space-y-6">
-
 <div class="card text-center">
 <img src="img/USUARIO1.jpg" class="w-20 h-20 rounded-full mx-auto mb-3">
-<h3 class="font-bold">Lucía Méndez</h3>
-<p class="text-gray-400 text-sm">Vitalista Nivel 14</p>
-
-<div class="flex justify-around mt-4 text-sm">
-<div><p class="font-bold">12</p><span>Días</span></div>
-<div><p class="font-bold">48</p><span>Posts</span></div>
-<div><p class="font-bold">2.4k</p><span>Puntos</span></div>
+<h3 class="font-bold">Comunidad NutriTech</h3>
+<p class="text-gray-400 text-sm">Conecta con usuarios reales</p>
 </div>
 </div>
 
-<div class="card text-center">
-<h3 class="font-bold text-green-600 mb-2">Miembro del Mes</h3>
-<img src="img/USUARIO2.jpg" class="w-16 h-16 rounded-full mx-auto mb-2">
-<p class="font-bold">Carlos Ruiz</p>
-<p class="text-xs text-gray-500">"Perdí 5kg y mejoré mi energía"</p>
-</div>
-
-</div>
-
-<!-- FEED -->
 <div class="col-span-2 space-y-6">
+<div id="globalAlert" class="hidden"></div>
 
-<!-- CREAR POST -->
 <div class="card">
-<textarea id="postInput" placeholder="Comparte tus logros..." 
+<form id="postForm">
+<textarea id="postInput" placeholder="Comparte tus logros..."
 class="w-full p-3 border rounded mb-3"></textarea>
 
 <div class="flex justify-between">
 <span class="text-gray-400 text-sm">Foto | Logro</span>
-<button onclick="addPost()" class="bg-green-600 text-white px-4 py-2 rounded-full">
+<button id="postBtn" type="submit" class="bg-green-600 text-white px-4 py-2 rounded-full">
 Publicar
 </button>
 </div>
+</form>
 </div>
 
-<!-- POSTS -->
-<div id="feed"></div>
-
+<div id="feed" class="space-y-4"></div>
+<div id="feedEmpty" class="hidden card text-center text-gray-500">Aún no hay publicaciones. Sé el primero en publicar.</div>
 </div>
 
-<!-- LATERAL DERECHO -->
 <div class="col-span-1 space-y-6">
-
 <div class="card">
 <h3 class="font-bold mb-3">Tendencias</h3>
 <ul class="text-sm space-y-2">
 <li>#RetoHidratación</li>
 <li>#KetoFriendly</li>
-<li>#Vitalismo2024</li>
+<li>#Vitalismo2026</li>
 <li>#AyunoIntermitente</li>
 </ul>
 </div>
-
-<div class="card">
-<h3 class="font-bold mb-3">Expertos</h3>
-
-<div class="flex items-center gap-3 mb-2">
-<img src="img/USUARIO3.jpg" class="w-8 h-8 rounded-full">
-<p>Dr. Hugo V.</p>
 </div>
-
-<div class="flex items-center gap-3">
-<img src="img/USUARIO4.jpg" class="w-8 h-8 rounded-full">
-<p>Dra. Sara L.</p>
-</div>
-
-</div>
-
-</div>
-
 </main>
 
-<!-- JS -->
-<script>
-
-// NAVEGACIÓN
-function goTo(page){
-window.location.href = page;
-}
-
-// PUBLICAR
-function addPost(){
-let input = document.getElementById("postInput");
-if(input.value.trim() === "") return;
-
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-posts.unshift({
-text: input.value,
-likes: 0
-});
-
-localStorage.setItem("posts", JSON.stringify(posts));
-input.value="";
-renderPosts();
-}
-
-// RENDER POSTS
-function renderPosts(){
-let feed = document.getElementById("feed");
-let posts = JSON.parse(localStorage.getItem("posts")) || [];
-
-feed.innerHTML="";
-
-posts.forEach((p,i)=>{
-let div = document.createElement("div");
-div.className="card";
-
-div.innerHTML = `
-<p class="mb-3">${p.text}</p>
-
-<img src="img/FRUTAS.jpg" class="rounded mb-3">
-
-<div class="flex justify-between text-sm">
-<button onclick="likePost(${i})">❤️ ${p.likes}</button>
-<button>💬 0</button>
-<button>↗</button>
-</div>
-`;
-
-feed.appendChild(div);
-});
-}
-
-// LIKE
-function likePost(index){
-let posts = JSON.parse(localStorage.getItem("posts"));
-posts[index].likes++;
-localStorage.setItem("posts", JSON.stringify(posts));
-renderPosts();
-}
-
-// INIT
-document.addEventListener("DOMContentLoaded", renderPosts);
-
-</script>
-
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
